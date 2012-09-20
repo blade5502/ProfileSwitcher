@@ -1,0 +1,28 @@
+<UserControl
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" Height="266" Width="338" Name="mainControl">
+    <Grid Height="258" Width="327">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="65*" />
+            <ColumnDefinition Width="262*" />
+        </Grid.ColumnDefinitions>
+        <Label Content="Number of times to retry profile on death" Height="26" HorizontalAlignment="Left" Margin="0,58,0,0" VerticalAlignment="Top" Width="235" Grid.ColumnSpan="2" />
+        <Label Content="Allowed runtime before disabling retries" Height="26" Margin="8,85,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="235" Grid.ColumnSpan="2" />
+        <Label Content="Max revive Time (to detect stuck on death)" Height="26" Margin="0,113,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="235" Grid.ColumnSpan="2" />
+        <Label Content="retries" Height="26" HorizontalAlignment="Left" Margin="204,59,0,0" VerticalAlignment="Top" Width="58" Grid.Column="1" />
+        <Label Content="minutes" Height="26" HorizontalAlignment="Left" Margin="204,87,0,0" VerticalAlignment="Top" Width="54" Grid.Column="1" />
+        <Label Content="seconds" Height="26" HorizontalAlignment="Left" Margin="204,114,0,0" VerticalAlignment="Top" Width="54" Grid.Column="1" />
+        <TextBox Name="textDeathRetries" Height="20" HorizontalAlignment="Left"  Margin="173,60,0,0" Text="2" VerticalAlignment="Top" Width="25" Grid.Column="1" />
+        <TextBox Name="textRetryRunTime" Height="20" HorizontalAlignment="Left" Margin="173,89,0,0" Text="5" VerticalAlignment="Top" Width="25" Grid.Column="1" />
+        <TextBox Name="textMaxReviveTime" Height="20" HorizontalAlignment="Left" Margin="173,117,0,0" Text="20" VerticalAlignment="Top" Width="25" Grid.Column="1" />
+        <Button Name="buttonSave" Content="Save settings" Height="25" HorizontalAlignment="Center" Margin="116,221,46,0" VerticalAlignment="Top" Width="100" Grid.Column="1" />
+        <Button Name="buttonDefault" Content="Default settings" Height="25" HorizontalAlignment="Center" Margin="51,221,176,0" VerticalAlignment="Top" Width="100" Grid.ColumnSpan="2" />
+        <TextBox Height="20" HorizontalAlignment="Left" Margin="12,181,0,0" Text="C:\" VerticalAlignment="Top" Width="303" Name="textProfilesPath" Grid.ColumnSpan="2" Visibility="Hidden" />
+        <CheckBox Content="Enable advanced deathhandling" Height="16" HorizontalAlignment="Left" Margin="12,12,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2" Name="checkboxEnableAdvancedDeathhandling" />
+        <CheckBox Content="Enable profile randomization" Grid.ColumnSpan="2" Height="16" HorizontalAlignment="Left" Margin="12,34,0,0" VerticalAlignment="Top" IsEnabled="True" Name="checkboxEnableProfileRandomization" />
+        <CheckBox Content="Profiles path override" Height="16" HorizontalAlignment="Left" Margin="12,159,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2" Name="checkboxPathOverride" />
+    </Grid>
+</UserControl>
