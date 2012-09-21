@@ -44,6 +44,7 @@ namespace ProfileSwitcher
         private static long reviveTime = 0;
         public static string profilesPath { get; set; }
         public static bool advancedDeathHandling = true;
+        public static int advancedDrathHandlingMethod = 0;
         public static bool profileRandomization = false;
         public static bool pathOverride = false;
         public static string configProfilesPath { get; set; }
@@ -123,10 +124,17 @@ namespace ProfileSwitcher
                                 startRunTimer();
                                 if (advancedDeathHandling == true)
                                 {
-                                    if (!profileHandler.LoadTempProfile())
-                                    {
-                                        Log("No close waypoint found, restarting profile");
-                                        profileHandler.ReloadProfile();
+                                    switch (advancedDrathHandlingMethod){
+                                        case 0: //Find nearest Waypoint
+                                            if (!profileHandler.LoadTempProfile())
+                                            {
+                                                Log("No close waypoint found, restarting profile");
+                                                profileHandler.ReloadProfile();
+                                            }
+                                            break;
+                                        case 1: //Checkpoint System
+                                            //Checkpoint logic atm not implemented
+                                            break;
                                     }
                                 }
                                 else
@@ -170,6 +178,7 @@ namespace ProfileSwitcher
         {
             currentDeath = DateTime.Now;
             TimeSpan ts = new TimeSpan(currentDeath.Ticks - lastDeath.Ticks);
+            //Filter OnPlayerDied event spamming from DB
             if (ts.TotalSeconds < 5)
             {
                 Log("Ignoring Death");
@@ -277,6 +286,7 @@ namespace ProfileSwitcher
         private Button buttonSave, buttonDefault;
         private TextBox textDeathRetries, textRetryRunTime, textMaxReviveTime, textProfilesPath;
         private CheckBox checkboxEnableAdvancedDeathhandling, checkboxEnableProfileRandomization, checkboxPathOverride;
+        private ComboBox comboBoxAndvancedDeathHandling;
         private Window configWindow;
         public Window DisplayWindow
         {
@@ -303,6 +313,8 @@ namespace ProfileSwitcher
                     checkboxEnableAdvancedDeathhandling = LogicalTreeHelper.FindLogicalNode(xamlContent, "checkboxEnableAdvancedDeathhandling") as CheckBox;
                     checkboxEnableAdvancedDeathhandling.Checked += new RoutedEventHandler(checkboxAdvancedDeathHandling_check);
                     checkboxEnableAdvancedDeathhandling.Unchecked += new RoutedEventHandler(checkboxAdvancedDeathHandling_uncheck);
+                    comboBoxAndvancedDeathHandling = LogicalTreeHelper.FindLogicalNode(xamlContent, "checkBoxAdvancedDeathHandling") as ComboBox;
+                    comboBoxAndvancedDeathHandling.SelectionChanged += new SelectionChangedEventHandler(comboBoxAdvancedDeathhandling_selectionChanged);
                     checkboxEnableProfileRandomization = LogicalTreeHelper.FindLogicalNode(xamlContent, "checkboxEnableProfileRandomization") as CheckBox;
                     checkboxEnableProfileRandomization.Checked += new RoutedEventHandler(checkboxProfileRandomization_check);
                     checkboxEnableProfileRandomization.Unchecked += new RoutedEventHandler(checkboxProfileRandomization_uncheck);
@@ -352,6 +364,11 @@ namespace ProfileSwitcher
             advancedDeathHandling = false;
         }
 
+        private void comboBoxAdvancedDeathhandling_selectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            advancedDrathHandlingMethod = comboBoxAndvancedDeathHandling.SelectedIndex;
+        }
+
         private void checkboxProfileRandomization_check(object sender, RoutedEventArgs e)
         {
             profileRandomization = true;
@@ -382,6 +399,7 @@ namespace ProfileSwitcher
         private void configWindow_Loaded(object sender, RoutedEventArgs e)
         {
             checkboxEnableAdvancedDeathhandling.IsChecked = advancedDeathHandling;
+            comboBoxAndvancedDeathHandling.SelectedIndex = advancedDrathHandlingMethod;
             checkboxEnableProfileRandomization.IsChecked = profileRandomization;
             textDeathRetries.Text = maxDeathRetries.ToString();
             textRetryRunTime.Text = maxRetryRunTime.ToString();
@@ -426,6 +444,7 @@ namespace ProfileSwitcher
         private void buttonDefault_Click(object sender, RoutedEventArgs e)
         {
             advancedDeathHandling = true;
+            advancedDrathHandlingMethod = 0;
             checkboxEnableAdvancedDeathhandling.IsChecked = true;
             profileRandomization = false;
             checkboxEnableProfileRandomization.IsChecked = false;
@@ -449,6 +468,7 @@ namespace ProfileSwitcher
             using (StreamWriter configWriter = new StreamWriter(configStream))
             {
                 configWriter.WriteLine("advancedDeathHandling=" + advancedDeathHandling.ToString());
+                configWriter.WriteLine("advancedDrathHandlingMethod=" + advancedDrathHandlingMethod.ToString());
                 configWriter.WriteLine("profileRandomization=" + profileRandomization.ToString());
                 configWriter.WriteLine("maxDeathRetries=" + maxDeathRetries.ToString());
                 configWriter.WriteLine("maxRetryRunTime=" + maxRetryRunTime.ToString());
@@ -481,6 +501,9 @@ namespace ProfileSwitcher
                         {
                             case "advancedDeathHandling":
                                 advancedDeathHandling = Convert.ToBoolean(config[1]);
+                                break;
+                            case "advancedDrathHandlingMethod":
+                                advancedDrathHandlingMethod = Convert.ToInt32(config[1]);
                                 break;
                             case "profileRandomization":
                                 profileRandomization = Convert.ToBoolean(config[1]);
